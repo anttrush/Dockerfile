@@ -1,0 +1,13 @@
+FROM anttrush/apache2:v0
+MAINTAINER DockerJSK <jishukai@act.buaa.edu.cn>
+RUN apt-get install -yqq openssh-server
+RUN echo 'root:123456' |chpasswd
+RUN sed -ri 's/^PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
+RUN echo "#!/bin/bash" >> /startssh
+RUN echo "/usr/sbin/sshd -D" >> /startssh
+RUN echo "tail -f /dev/null" >> /startssh
+RUN chmod +x /startssh
+RUN mkdir /var/run/sshd
+EXPOSE 22
+ENTRYPOINT ["./startssh"]
