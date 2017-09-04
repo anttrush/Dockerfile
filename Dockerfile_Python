@@ -1,0 +1,10 @@
+FROM anttrush/apache2:v0
+MAINTAINER DockerJSK <jishukai@act.buaa.edu.cn>
+RUN apt-get install -yqq Python-pip
+ADD codetmp/ code/
+RUN pip install -r code/requirements.txt
+RUN chmod +x code/Procfile
+RUN echo "tail -f /dev/null" >> code/Procfile
+WORKDIR /code
+EXPOSE 8000
+ENTRYPOINT ["./Procfile"]
